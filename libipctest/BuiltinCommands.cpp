@@ -444,7 +444,7 @@ bool CommandExec::execute(RunContext& context)
     pid_t pid = fork();
     if (pid == -1)
     {
-        LOG << "Error: could not fork child process." << std::endl;
+        LOGLE << "Error: could not fork child process." << std::endl;
         return false;
     }
 
@@ -453,7 +453,7 @@ bool CommandExec::execute(RunContext& context)
         pid_ = pid;
         if (waitFor_)
         {
-            LOG << "Waiting for child pid=" << pid_ << endl;
+            LOGL << "Waiting for child pid=" << pid_ << endl;
             int child_stat;
             waitpid(pid_, &child_stat, 0);
         }
@@ -477,7 +477,7 @@ bool CommandExec::execute(RunContext& context)
     execvp(cmdpv[0], (char* const *)cmdpv.data());
 
     // We only fall thru on error
-    LOG << "Could not exec: " << cmdv[0] << endl;
+    LOGLE << "Could not exec: " << cmdv[0] << endl;
     _exit(1);
     return false;	// NOT REACHED
 }
@@ -787,7 +787,7 @@ bool CommandWhile::execute(RunContext& context)
     condition_->setParams(params_);
 //    std::cout << "param is " << params_ << std::endl;
 
-    LOG << "exec while: " << condition_->toString() << std::endl;
+    LOGL << "exec while: " << condition_->toString() << std::endl;
 
     bool okStatus = true;
 
@@ -811,7 +811,7 @@ bool CommandWhile::execute(RunContext& context)
             {
                 Command* cmd = *it;
                 // stop executing on first error, but still have to skip to end
-                LOG << "Executing from While:" << std::endl;
+                LOGL << "Executing from While:" << std::endl;
                 if (!cmd->execute(context))
                 {
                     okStatus = false;
@@ -820,7 +820,7 @@ bool CommandWhile::execute(RunContext& context)
             }
         }
 //        condStatus = (*condition_)(context);
-//        LOG << "condStatus is " << condStatus << " okStatus is " << okStatus << endl;
+//        LOGL << "condStatus is " << condStatus << " okStatus is " << okStatus << endl;
     }
 
     // Update command to run after our nested commands

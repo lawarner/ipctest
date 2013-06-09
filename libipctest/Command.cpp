@@ -20,9 +20,9 @@
 
 // Command.cpp
 //
-#include <iostream>
 #include <sstream>
 #include "Command.h"
+#include "Log.h"
 #include "Message.h"
 #include "RunContext.h"
 using namespace ipctest;
@@ -59,7 +59,7 @@ Command* Command::createCommand(const std::string& cmdName,
 void Command::registerCommand(Command* cmd)
 {
     sCommands_[cmd->getName()] = cmd;
-    std::cout << "register command " << cmd->getName() << std::endl;
+    LOGLN(Trace) << "register command " << cmd->getName() << std::endl;
 }
 
 

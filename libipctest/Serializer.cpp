@@ -22,12 +22,12 @@
 //
 
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <expat.h>
 #include <string.h>
 
 #include "Command.h"
+#include "Log.h"
 #include "Params.h"
 #include "Parser.h"
 #include "Serializer.h"
@@ -67,7 +67,7 @@ void Serializer::deserialStartTag(const char* el, const char** attr)
 {
     std::string str(parseLevel_ * 4, ' ');
     std::string startTag(el);
-    std::cout << str << "<" << startTag << ">" << std::endl;
+    LOGLT << str << "<" << startTag << ">" << std::endl;
 
     deserialData_.seekp(0);
 
@@ -124,8 +124,8 @@ void Serializer::deserialStartTag(const char* el, const char** attr)
 
     if (!validStart)
     {
-        std::cout << "Error parsing, invalid tag " << startTag
-                  << " at level " << parseLevel_ << std::endl;
+        LOGLE << "Error parsing, invalid tag " << startTag
+              << " at level " << parseLevel_ << std::endl;
 //        XML_StopParser((XML_Parser) data, false);
     }
 
@@ -141,7 +141,7 @@ void Serializer::startCommand(const char** attr)
         commandParams_.loadFromNameValues(attr);
         if (commandParams_.get("_message", messageName_))
         {
-            cout << " CommandSection message=" << messageName_ << endl;
+            LOGLT << " CommandSection message=" << messageName_ << endl;
             commandMessage_ = testBase_->lookupMessage(messageName_);
         }
         else
@@ -149,7 +149,7 @@ void Serializer::startCommand(const char** attr)
     }
     string strcond;
     if (commandParams_.get("_condition", strcond))
-        cout << "  ==> Condition: " << strcond << endl;
+        LOGLT << "  ==> Condition: " << strcond << endl;
 }
 
 
@@ -181,7 +181,7 @@ void Serializer::deserialEndTag(const char* el)
         std::string cmdName = el;
         int level = 0;
         commandParams_.get("_level", level);
-        cout << strindent << "createCommand("
+        LOGLT << strindent << "createCommand("
              << cmdName << ", " << messageName_ << ") level=" 
              << level << endl;
 
@@ -215,11 +215,10 @@ void Serializer::deserialEndTag(const char* el)
         std::string fldVal(cdata);
 //        std::string fldVal(fieldParams_.get("_cdata"));
         messageFields_.set(fldName, fldVal);
-        cout << "messageFields set " << fldName << " to " << fldVal << endl;
+        LOGLT << "messageFields set " << fldName << " to " << fldVal << endl;
     }
     else
-        std::cout << strindent << "</"
-                  << el << "> cdata=" << cdata << std::endl;
+        LOGLT << strindent << "</" << el << "> cdata=" << cdata << std::endl;
 }
 
 
@@ -246,7 +245,7 @@ static void _deserialPI(void *data, const char *target, const char *pidata)
 
 void Serializer::deserialPI(const char *target, const char *pidata)
 {
-    std::cout << " xml PI target=" << target << ", pidata=" << pidata << std::endl;
+    LOGLD << " xml PI target=" << target << ", pidata=" << pidata << std::endl;
 }
 
 
@@ -263,7 +262,7 @@ bool Serializer::deserialize(const std::string& fileName)
     std::string magic("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ipctest>");
     if (itsFile.compare(0, magic.size(), magic))
     {
-        std::cerr << "File " << fileName << " is not an ipctest file." << std::endl;
+        LOGLE << "File " << fileName << " is not an ipctest file." << std::endl;
         return false;
     }
 

@@ -23,11 +23,11 @@
 
 #include <sys/types.h>
 #include <regex.h>
-#include <iostream>
 #include <sstream>
 #include <vector>
 
 #include "Condition.h"
+#include "Log.h"
 #include "Params.h"
 #include "Parser.h"
 #include "RunContext.h"
@@ -42,9 +42,9 @@ static void outputVector(const vector<string>& vCond)
     for ( ; it != vCond.end(); ++it)
     {
         string scond = *it;
-        cout << scond << " ";
+        LOGL << scond << " ";
     }
-    cout << "." << endl;
+    LOGL << "." << endl;
 }
 
 
@@ -61,7 +61,7 @@ Condition* Condition::createCondition(const std::string& strCond)
 
 Condition* Condition::createCondition(vector<string>& vCond)
 {
-    cout << "Condition tokens:" << endl;
+    LOGL << "Condition tokens:" << endl;
     outputVector(vCond);
     
     if (vCond.empty())
@@ -70,12 +70,12 @@ Condition* Condition::createCondition(vector<string>& vCond)
     if (vCond[0] == "(")
     {
         vector<string> vNested(extractNested(vCond));
-        cout << "nest start." << endl;
+        LOGL << "nest start." << endl;
         Condition* condNested = createCondition(vNested);
-        cout << "nest end." << endl;
+        LOGL << "nest end." << endl;
         if (!vCond.empty())
         {
-            cout << "Ignore tokens after nest: ";
+            LOGL << "Ignore tokens after nest: ";
             outputVector(vCond);
         }
         return condNested;
@@ -91,12 +91,12 @@ Condition* Condition::createCondition(vector<string>& vCond)
     {
         bool isAnd = (vCond[0] == "and") ? true : false;
 
-        cout << " -" << vCond[0] << " nested: ";
+        LOGL << " -" << vCond[0] << " nested: ";
         vector<string> vNested(extractNested(vCond));
         outputVector(vNested);
         if (vNested.size() < 3)
         {
-            cout << "Error, not enough parameters" << endl;
+            LOGL << "Error, not enough parameters" << endl;
         }
         else
         {
@@ -118,24 +118,24 @@ Condition* Condition::createCondition(vector<string>& vCond)
         vector<string> vNested(extractNested(vCond));
         if (vNested.size() != 5)	// includes 2 commas
         {
-            cout << "Error: paramvalue needs exactly 3 parameters" << endl;
+            LOGLE << "Error: paramvalue needs exactly 3 parameters" << endl;
         }
         else if (vNested[1] != "," || vNested[3] != ",")
         {
-            cout << "Error: malformed statement, missing commas." << endl;
+            LOGLE << "Error: malformed statement, missing commas." << endl;
         }
         else
         {
             ComparisionOp cop = getOp(vNested[2]);
             if (cop == OpInvalid)
-                cout << "Error: invalid condition - " << vNested[2] << endl;
+                LOGLE << "Error: invalid condition - " << vNested[2] << endl;
             else
                 retcond = new ConditionParamValue(vNested[0], cop, vNested[4]);
         }
     }
 
     if (retcond)
-        cout << "Created condition: " << retcond->toString() << endl;
+        LOGL << "Created condition: " << retcond->toString() << endl;
 
     return retcond;
 }
@@ -236,17 +236,18 @@ bool ConditionParamValue::regexMatch(const std::string& str) const
     regex_t re;
     if (regcomp(&re, value_.c_str(), REG_EXTENDED | REG_NOSUB))
     {
-        cout << "Error: cannot compile regex: " << value_ << endl;
+        LOGLE << "Error: cannot compile regex: " << value_ << endl;
         return false;
     }
 
     if (regexec(&re, str.c_str(), 0, 0, 0))
     {
-        cout << "Did not match regex" << endl;
+        LOGL << "Did not match regex" << endl;
         regfree(&re);
         return false;
     }
 
+    LOGL << "Matched the regex" << endl;
     regfree(&re);
     return true;
 }
@@ -291,10 +292,10 @@ bool ConditionParamValue::operator() (RunContext& context)
         ret = !regexMatch(pvalue);
         break;
     default:
-        std::cout << "Error: invalid operator value=" << oper_ << std::endl;
+        LOGLE << "Error: invalid operator value=" << oper_ << std::endl;
     }
 
-    cout << " comparing " << pvalue << opName[oper_] << " to " << value_ 
+    LOGL << " comparing " << pvalue << opName[oper_] << " to " << value_ 
          << " returns " << boolalpha << ret << endl;
 
     return ret;

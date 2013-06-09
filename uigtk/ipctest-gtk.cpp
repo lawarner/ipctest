@@ -44,8 +44,8 @@ int main(int argc, char* argv[])
 #else
     Gtk::Main kit(argc, argv);
 #endif
-    std::string defFilename =  "t";
-    std::string testFilename = "t.its";
+    std::string defFilename =  "../examples/t";
+    std::string testFilename = "../examples/t.its";
 #if 0
     if (argc < 2)
     {

@@ -26,18 +26,20 @@ INCDIR = $(SOCKSTR)/include
 LIBSOCKLIB = $(SOCKSTR)/src/libsockstr.a
 LIBIPCDIR = ../libipctest
 LIBIPCTEST = $(LIBIPCDIR)/libipctest.a
+LIBOPENSSL = -lssl -lcrypto
 
 GTKINC = `pkg-config --cflags gtkmm-3.0`
 GTKLIB = `pkg-config --libs gtkmm-3.0`
 
+DEPLIBS = $(LIBIPCTEST) $(LIBSOCKLIB) $(LIBOPENSSL)
+
 SUBDIRS = 
 
 CC = g++
-#CFLAGS = -Wall -O2 -I..
-DEPCPPFLAGS = -Wall -g -O0 -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR) -I$(LIBIPCDIR)
-CPPFLAGS = $(DEPCPPFLAGS) -I$(GTKINC)
+CCFLAGS = -Wall -g -O0 -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR) -I$(LIBIPCDIR) $(GTKINC)
+DEPCPPFLAGS = $(CCFLAGS)
 LDFLAGS = -pthread
-LDLIBS = $(LIBIPCTEST) $(LIBSOCKLIB) $(GTKLIB)
+LDLIBS = $(GTKLIB)
 
 OBJS := ipctest-gtk.o MainWindow.o HistoryList.o
 
@@ -45,14 +47,14 @@ SRCS := $(OBJS:.o=.cpp)
 
 INCS = 
 
-
 PROGRAMS = ipctest-gtk
+
+.cpp.o: ; $(CC) $(CCFLAGS) -c $<
 
 
 all: $(PROGRAMS) subdirs
 
-ipctest-gtk: $(OBJS) $(LIBIPCTEST) $(LIBSOCKLIB)
-
+ipctest-gtk: $(OBJS) $(DEPLIBS)
 
 .PHONY: subdirs
 subdirs:
@@ -64,6 +66,7 @@ subdirs:
 .PHONY: clean
 clean:
 	rm -f $(OBJS) $(PROGRAMS)
+	touch -r .mkdep-timestamp .makedepends
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done

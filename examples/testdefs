@@ -1,0 +1,61 @@
+// These are just sample IPC messages
+#ifndef _TEST_IPCDEFS
+#define _TEST_IPCDEFS
+
+#pragma pack(2)
+
+#include <sockstr/IPC.h>
+
+
+IPC_MESSAGE(EndOfFile)
+	// Empty
+IPC_ENDMESSAGE
+
+IPC_MESSAGE(Login)
+	int userid;
+	int16 group;
+	char hashpwd[256];	// hash of password
+IPC_ENDMESSAGE
+
+IPC_MESSAGE(LongMessage)
+	int field1;
+	char ch1;
+	int field2;
+	char ch2;
+	int field3;
+	char ch3;
+	int field4;
+	char ch4;
+	int field5;
+	char ch5;
+	int field6;
+	char ch6;
+	int field7;
+	char ch7;
+	int field8;
+	char ch8;
+	int field9;
+	char ch9;
+	int anint1;
+	char ccz1;
+	int anint2;
+	char ccz2;
+	int anint3;
+	char ccz3;
+	int anint4;
+	char ccz4;
+	int anint5;
+	char ccz5;
+	int anint6;
+	char ccz6;
+	int anint7;
+	char ccz7;
+	int anint8;
+	char ccz8;
+	int anint9;
+	char ccz9;
+IPC_ENDMESSAGE
+
+#pragma pack()
+
+#endif

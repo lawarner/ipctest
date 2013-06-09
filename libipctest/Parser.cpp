@@ -21,9 +21,9 @@
 // Parser.cpp
 //
 
-#include <iostream>
 #include <sstream>
 #include "Field.h"
+#include "Log.h"
 #include "Message.h"
 #include "Parser.h"
 using namespace ipctest;
@@ -203,8 +203,8 @@ void Parser::splitDelimitedTokens(const std::string& str, vector<std::string>& s
         }
     }
 
-    cout << "(curr,next)=" << (curr==str.npos?0:curr)
-         << "," << (next==str.npos?0:next) << endl;
+    LOGLN(Trace) << "(curr,next)=" << (curr==str.npos?0:curr)
+                 << "," << (next==str.npos?0:next) << endl;
 }
 
 void Parser::trimSpace(PairIter& pi, bool stripComments)

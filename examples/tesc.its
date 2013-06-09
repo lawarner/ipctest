@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipctest>
+    <!-- Ipctest Testsuite file version 1.0 -->
+    <messages/>
+    <commands>
+        <Comment>
+The &gt; man had a &lt; moment &amp; dies.
+        </Comment>
+        <Loop iterations="3">
+        </Loop>
+        <Comment>
+this should repeat itself 3 times.
+        </Comment>
+        <Comment>
+But this comment should be only once.
+        </Comment>
+    </commands>
+</ipctest>

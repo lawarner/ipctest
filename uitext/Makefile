@@ -26,30 +26,35 @@ INCDIR = $(SOCKSTR)/include
 LIBSOCKLIB = $(SOCKSTR)/src/libsockstr.a
 LIBIPCDIR = ../libipctest
 LIBIPCTEST = $(LIBIPCDIR)/libipctest.a
+LIBOPENSSL = -lssl -lcrypto
+
+XMLINC = `pkg-config --cflags expat`
+XMLLIB = `pkg-config --libs expat`
+
+DEPLIBS = $(LIBIPCTEST) $(LIBSOCKLIB) $(LIBOPENSSL)
 
 SUBDIRS = 
 
 CC = g++
-#CCFLAGS = -Wall -g -O2 -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR) -I$(LIBIPCDIR)
-CPPFLAGS = -Wall -g -O2 -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR) -I$(LIBIPCDIR)
+CCFLAGS = -Wall -g -O0 -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR) -I$(LIBIPCDIR) $(XMLINC)
+DEPCPPFLAGS = $(CCFLAGS)
 LDFLAGS = -pthread
-LDLIBS = $(LIBIPCTEST) $(LIBSOCKLIB)
+LDLIBS = $(XMLLIB)
 
-#COMPILE = $(CC) $(CFLAGS) -c
-
-OBJS := ipctest-tui.o
+OBJS := ipctest-tui.o CommandRunner.o
 
 SRCS := $(OBJS:.o=.cpp)
 
 INCS = 
 
-
 PROGRAMS = ipctest-tui
+
+.cpp.o: ; $(CC) $(CCFLAGS) -c $<
 
 
 all: $(PROGRAMS) subdirs
 
-# ipctest: $(OBJS) $(LIBIPCTEST) $(LIBSOCKLIB)
+ipctest-tui: $(OBJS) $(DEPLIBS)
 
 
 .PHONY: subdirs
@@ -61,7 +66,7 @@ subdirs:
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(PROGRAMS) .makedepends
+	rm -f $(OBJS) $(PROGRAMS)
 	touch -r .mkdep-timestamp .makedepends
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
@@ -69,7 +74,7 @@ clean:
 
 .PHONY: depends
 depends: $(SRCS) $(INCS)
-	$(CC) -I. $(CPPFLAGS) -MM $(SRCS) > .makedepends
+	$(CC) -I. $(DEPCPPFLAGS) -MM $(SRCS) > .makedepends
 	touch .mkdep-timestamp
 
 .makedepends:

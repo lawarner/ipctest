@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipctest>
+    <!-- Ipctest Testsuite file version 1.0 -->
+    <messages/>
+    <commands>
+        <Comment>
+initDialog complete.
+        </Comment>
+        <Connect>
+localhost:4321
+        </Connect>
+        <Send message="Login">
+            <Message>
+                <Field name="userid">
+1024
+                </Field>
+                <Field name="group">
+31
+                </Field>
+                <Field name="hashpwd">
+Have a nice day.
+                </Field>
+            </Message>
+        </Send>
+    </commands>
+</ipctest>

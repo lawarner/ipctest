@@ -34,6 +34,7 @@
 #include "RunContext.h"
 #include "TestBase.h"
 
+LOGINIT
 
 using namespace ipctest::uigtk;
 

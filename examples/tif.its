@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipctest>
+    <!-- Ipctest Testsuite file version 1.0 -->
+    <messages/>
+    <commands>
+        <If condition="paramvalue(_commandName,==,If)">
+        </If>
+        <Comment level="1">
+The paramvalue is true.
+        </Comment>
+        <If condition="paramvalue(_commandName,~==,J.*)">
+        </If>
+        <Comment level="1">
+The paramvalue regex matched.
+        </Comment>
+        <Loop iterations="3">
+        </Loop>
+        <Comment level="1">
+this should repeat itself 3 times.
+        </Comment>
+        <Comment>
+But this comment should be only once.
+        </Comment>
+        <If condition="true">
+        </If>
+        <Comment level="1">
+This comment is conditional.
+        </Comment>
+        <Else>
+        </Else>
+        <Comment level="1">
+This comment is in the Else clause.
+        </Comment>
+        <Comment>
+That is true.  This comment is always output.
+        </Comment>
+        <If condition="false">
+        </If>
+        <Comment level="1">
+This comment is conditional.
+        </Comment>
+        <Else>
+        </Else>
+        <Comment level="1">
+This comment is in the Else clause.
+        </Comment>
+    </commands>
+</ipctest>

@@ -16,6 +16,8 @@
 *.sdf
 *.suo
 
+.mkdep-timestamp
+
 /doc/html
 
 Debug/

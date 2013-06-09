@@ -1,0 +1,6 @@
+This folder contains some files used to test ipctest.
+
+The message definitions are in testdefs.  The *.its files are various test case
+files.  You can run as follows:
+
+./ipctest-gtk testcases/testdefs testcases/ttloop.its

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipctest>
+    <!-- Ipctest Testsuite file version 1.0 -->
+    <messages/>
+    <commands>
+        <Comment>
+Loop test starting...
+        </Comment>
+        <Loop iterations="3">
+        </Loop>
+        <Comment level="1">
+this should repeat itself 3 times.
+        </Comment>
+        <Comment>
+But this comment should be only once.
+        </Comment>
+        <Comment>
+Loop test done.
+        </Comment>
+    </commands>
+</ipctest>

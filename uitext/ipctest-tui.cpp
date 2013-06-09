@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2012
+   Copyright (C) 2012, 2013
    Andy Warner
    This file is part of the sockstr class library.
 
@@ -18,7 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-// ipctest.cpp
+// ipctest-tui.cpp
 //
 // This is a testing tool used to create and execute various collections
 // of tests.  The underlying IPC mechanism uses the sockstr library.
@@ -26,10 +26,10 @@
 #include <cerrno>
 #include <fstream>
 #include <iostream>
-#include <pthread.h>
 #include <unistd.h>
 #include <sockstr/sstypes.h>
 #include <sockstr/Socket.h>
+#include "CommandRunner.h"
 #include "Parser.h"
 
 using namespace sockstr;
@@ -39,98 +39,51 @@ using namespace ipctest;
 struct TParams
 {
     string ipcDefsFile;
+    string testFilename;
 };
 
-void* server_process(void* args)
+
+bool client_process(TParams* params)
 {
-    void* ret = (void*) 2;
-//    TParams* params = (TParams*) args;
+    bool ret = true;
 
-    Socket sock;
-    SocketAddr saddr(0, 4321);
-    if (!sock.open(saddr, Socket::modeReadWrite))
-    {
-        cout << "Error opening server socket: " << errno << endl;
-        return ret;
-    }
+    uitext::CommandRunner* runner
+        = new uitext::CommandRunner(params->ipcDefsFile, params->testFilename);
 
-    Stream* clientSock = sock.listen();
-    if (clientSock)
-    {
-        string strbuf;
+    ret = runner->setup();
+    if (ret)
+        ret = runner->run();
+    else
+        std::cerr << "Unable to setup command runner." << endl;
 
-//        clientSock->read(strbuf);
-        *clientSock >> strbuf;
-        while (clientSock->queryStatus() == SC_OK)
-        {
-             cout << "Response: " << strbuf << endl;
-            *clientSock >> strbuf;
-        }
-
-        clientSock->close();
-        delete clientSock;
-    }
-
-    sock.close();
-    return 0;
-}
-
-
-void* client_process(void* args)
-{
-    void* ret = (void*) 2;
-    TParams* params = (TParams*) args;
-    cout << "Client process started, reading from " << params->ipcDefsFile << endl;
-
-    ifstream ifile(params->ipcDefsFile.c_str());
-    if (!ifile.is_open())
-    {
-        cerr << "Could not open IPC definitions file " << params->ipcDefsFile << endl;
-        return ret;
-    }
-
-    string strIpcDefs((istreambuf_iterator<char>(ifile)),
-                      istreambuf_iterator<char>());
-    ifile.close();
-
-    MessageList msgList;
-    Parser parse;
-    if (!parse.stringToMessageList(strIpcDefs, msgList))
-    {
-        cerr << "Error parsing message list" << endl;
-        return ret;
-    }
-
-    cout << " * * *  MESSAGE LIST  * * *" << endl;
-    MessageList::iterator it;
-    for (it = msgList.begin(); it != msgList.end(); ++it)
-    {
-        cout << (*it)->getOrdinal() << " " << (*it)->getName()
-             << ", size=" << (*it)->getSize() << endl;
-    }
-
-    return 0;
+    delete runner;
+    return ret;
 }
 
 
 int main(int argc, const char* argv[])
 {
+    std::cout << "Program ipctest-tui start." << std::endl;
     TParams params;
-    if (argc > 1)
-        params.ipcDefsFile = argv[1];
-    else
+    params.ipcDefsFile  = "../examples/t";
+    params.testFilename = "../examples/t.its";
+
+#if 0
+    if (argc < 2)
     {
-        cout << "Usage: ipctest <ipcdef_filename>" << endl;
+        std::cerr << "Usage: ipctest-tui <ipcdef_filename> <testcase>" << std::endl;
         return 1;
     }
+#endif
+    if (argc > 1)
+        params.ipcDefsFile = argv[1];
+    if (argc > 2)
+        params.testFilename = argv[2];
 
-//    pthread_t tid;
-//    pthread_create(&tid, NULL, server_process, &params);
+    std::cout << "Defs=" << params.ipcDefsFile
+              << ", testcase=" << params.testFilename << std::endl;
 
     client_process(&params);
-
-//    void* res;
-//    pthread_join(tid, &res);
 
     return 0;
 }

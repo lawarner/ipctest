@@ -7,7 +7,7 @@ Field.o: Field.cpp Field.h FieldType.h
 FieldType.o: FieldType.cpp FieldType.h
 Message.o: Message.cpp Field.h FieldType.h Message.h Params.h
 Params.o: Params.cpp Params.h
-Parser.o: Parser.cpp Field.h FieldType.h Message.h Parser.h
+Parser.o: Parser.cpp Field.h FieldType.h Log.h Message.h Parser.h
 RunContext.o: RunContext.cpp Field.h FieldType.h Log.h Message.h \
  RunContext.h Command.h Params.h
 Serializer.o: Serializer.cpp Command.h Params.h Parser.h Message.h \
