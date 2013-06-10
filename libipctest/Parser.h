@@ -54,40 +54,81 @@ static const char* TOKEN_SEPERATORS = " \t\n\r;:()/#*";
 //
 // CLASS DEFINITIONS
 //
+
+/**
+ * A convenience class that simply holds two iterators that point into a string.
+ *
+ * It is useful for parsing that is often working with a range (start, end)
+ * of iterators.
+ */
 class PairIter
 {
 public:
+    /** Create an empty string. */
     PairIter(void) { }
+    /**
+     * Create a new pair.
+     * @param itBegin begin iterator of pair.
+     * @param itEnd   end iteraotr of pair.
+     */
 	PairIter(std::string::const_iterator itBegin, std::string::const_iterator itEnd)
         : begin_(itBegin), end_(itEnd) { }
+    /**
+     * Create a new pair.
+     * @param itBegin begin iterator of pair.
+     * @param itEnd   end iteraotr of pair.
+     */
     PairIter(const std::string& str)
         : begin_(str.begin()), end_(str.end()) { }
 
 
+    /** Return the begin iterator */
     const std::string::const_iterator& begin() const { return begin_; }
+    /** Return the end iterator */
     const std::string::const_iterator& end()   const { return end_; }
+    /**
+     * Extract the begin and end iterators.
+     * @param itBegin reference to begin iterator is returned here.
+     * @param itEnd   reference to end iterator is returned here.
+     */
     void get(std::string::const_iterator& itBegin, std::string::const_iterator& itEnd) const
     {
         itBegin = begin_;
         itEnd = end_;
     }
-    std::string get() { return std::string(begin_, end_); }
+    /**
+     * Get the value of the range as a string.
+     * @returns string representation of the range (begin, end).
+     */
+    std::string get() const { return std::string(begin_, end_); }
+
+    /**
+     * Set the beginning iterator of range.
+     * @param itBegin reference to the new begin.
+     */
     void set(const std::string::const_iterator& itBegin)
     {
         begin_ = itBegin;
     }
+    /**
+     * Set the beginning and ending iterators of range.
+     * @param itBegin reference to the new begin.
+     * @param itEnd   reference to the new end.
+     */
     void set(const std::string::const_iterator& itBegin,
              const std::string::const_iterator& itEnd)
     {
         begin_ = itBegin;
         end_ = itEnd;
     }
+
 private:
     std::string::const_iterator begin_;
     std::string::const_iterator end_;
 };
 
 /*
+  Future:
   (a)    t1
        / |  \
     d1(  a   )
@@ -96,7 +137,7 @@ private:
     |  \
    a,"b" )
 
-*/
+
 class PTNode
 {
 public:
@@ -117,21 +158,51 @@ class ParseTree : public PTNode
 {
     
 };
+*/
 
-
+/**
+ * Main parsing class.
+ *
+ * At the moment, it is only used to parse the IPC message definitions, which for the
+ * first version is a (restrictive) C languange include file.
+ * This will be refactored as a MessageParser class.  Probably a new Parser manager
+ * class will be added to allow unified parsing (IPC, xml, json, etc.).
+ */ 
 class Parser
 {
 public:
+    /** Create new IPC message parser. */
     Parser();
     virtual ~Parser();
 
+    /**
+     * Read message definitions from a file and create a message list.
+     * @param fname file name containing IPC message definitions.
+     * @param ml message list returned.
+     * @returns true on success, otherwise false.
+     */
     bool fileToMessageList(const std::string& fname, MessageList& ml);
+    /**
+     * Read message definitions from a string and create a message list.
+     * @param str string containing IPC message definitions.
+     * @param ml message list returned.
+     * @returns true on success, otherwise false.
+     */
     bool stringToMessageList(const std::string& str, MessageList& ml);
 
+    /**
+     * Create new message structure based on message name and definition.
+     * @param msgName name of message to define.
+     * @param inStr iterator pair of string containing the message definition.
+     *              The pair's end may point beyond the message.  This parameter
+     *              is updated to point past the message body upon return.
+     * @return pointer to the new message definition.
+     */
     Message* createMessage(const std::string& msgName, PairIter& inStr);
 
+    // These are more internal functions, but could be useful outside this class
     static bool getLine(PairIter& inStr, PairIter& outLine, bool trim = true);
-    static bool makeParseTree(const std::string& str, ParseTree& tree);
+    //static bool makeParseTree(const std::string& str, ParseTree& tree);
     static void splitTokens(const std::string& str, std::vector<std::string>& strVec,
         const char* seps = TOKEN_SEPERATORS);
     static void splitDelimitedTokens(const std::string& str, std::vector<std::string>& strVec,

@@ -16,6 +16,10 @@
 *.sdf
 *.suo
 
+# qt stuff
+build-*/
+*.pro.user
+
 .mkdep-timestamp
 
 /doc/html

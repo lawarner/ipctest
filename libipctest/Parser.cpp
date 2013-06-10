@@ -21,7 +21,9 @@
 // Parser.cpp
 //
 
+#include <string.h>
 #include <sstream>
+
 #include "Field.h"
 #include "Log.h"
 #include "Message.h"
@@ -32,6 +34,7 @@ using namespace std;
 //
 static const string msgBegin("IPC_MESSAGE(");
 static const string msgEnd("IPC_ENDMESSAGE");
+#define WHITESPACE " \t\n\r"
 
 
 Parser::Parser()
@@ -140,11 +143,6 @@ bool Parser::getLine(PairIter& inStr, PairIter& outLine, bool trim)
 }
 
 
-bool makeParseTree(const std::string& str, ParseTree& tree)
-{
-    return false;
-}
-
 void Parser::splitTokens(const std::string& str, vector<std::string>& strVec,
                          const char* seps)
 {
@@ -221,7 +219,8 @@ void Parser::trimSpace(PairIter& pi, bool stripComments)
     string::const_iterator it = pi.begin();
     for ( ; it != pi.end(); ++it)
     {
-        if (*it != ' ' && *it != '\t' && *it != '\n')
+//        if (*it != ' ' && *it != '\t' && *it != '\n')
+        if (!strchr(WHITESPACE, *it))
             break;
     }
     if (it == pi.end())

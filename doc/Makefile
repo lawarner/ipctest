@@ -1,5 +1,5 @@
 #
-#   Copyright (C) 2012
+#   Copyright (C) 2013
 #   Andy Warner
 #   This file is part of the sockstr class library.
 #
@@ -18,56 +18,24 @@
 #   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 #   02111-1307 USA.  */
 
-# Simple makefile for the sockstr class library
+# Simple makefile for the ipctest docs
 
-TOP = .
-SOCKSTR=../sockstr
-INCDIR = $(SOCKSTR)/include
-LIBSOCKLIB = $(SOCKSTR)/src/libsockstr.a
-
-SUBDIRS = libipctest uitext uigtk
+TOP = ..
+INCDIR = $(TOP)/include
+IDIR2 = $(INCDIR)/sockstr
 
 CC = g++
-
-CCFLAGS = -Wall -g -O2 -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR)
-LDFLAGS = -pthread $(LIBSOCKLIB)
-
-OBJS := 
-
-SRCS := $(OBJS:.o=.cpp)
-
-INCS = 
+CCFLAGS = -Wall -g -O2 -I$(TOP) -I$(INCDIR)
 
 
-PROGRAMS = 
-
-
-.cpp.o: ; $(CC) $(CCFLAGS) -c $<
-
-
-all: $(PROGRAMS) subdirs
-
+all: doc
 
 .PHONY: doc
 doc:
-	make -C doc
-
-.PHONY: subdirs
-subdirs:
-	for dir in $(SUBDIRS); do \
-		make -C $$dir; \
-	done
+	rm -rf html
+	doxygen ./Doxyfile
 
 
 .PHONY: clean
 clean:
-	for dir in $(SUBDIRS) doc; do \
-		make -C $$dir clean; \
-	done
-
-
-.PHONY: depends
-depends:
-	for dir in $(SUBDIRS); do \
-		make -C $$dir depends; \
-	done
+	rm -rf html

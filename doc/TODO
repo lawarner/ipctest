@@ -1,17 +1,21 @@
-Some planned enhancements to ipctest        Updated: 5/12/2013
+Some planned enhancements to ipctest        Updated: 6/9/2013
 ------------------------------------        ------------------
 
 Improve ipctest UI so it is clear if test cases are being created, edited or
 run.  Allow drag-n-drop editting.  Add ability to group/ungroup function commands.
 
-Implement ipctest client with Qt UI and a webappserver UI.
+Implement ipctest client with a webappserver UI.
 
-Make the non-gui client run in batch mode.
+Bring ipctest-qt up to par with ipctest-gtk.
 
 Add extensible commands via plugin in ipctest.
+
+Add commandline switches to ipctest-tui.
 
 Make it easier to create new commands; maybe using class templates, helpers, etc.
 
 Add SendFile, ReceiveFile commands
 
-Support server-side testing
+Support server-side testing (involves threading)
+
+Decouple dependency on specific libraries, such as sockstr, expat.
