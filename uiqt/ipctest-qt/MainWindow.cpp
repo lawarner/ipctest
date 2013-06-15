@@ -39,12 +39,23 @@ bool MainWindow::setup(const std::string& defFilename, const std::string& testFi
         return ret;
 
     // Open test file
-    if (testBase_.deserialize(testFilename))
+    if (!testBase_.deserialize(testFilename))
     {
-        ipctest::CommandList& commandList = testBase_.commandList();
-        LOG << "Read in " << commandList.size() << " commands." << endl;
-        ret = true;
+        LOG << "Error reading commands from " << testFilename << endl;
+        return ret;
     }
+
+    ipctest::CommandList& commandList = testBase_.commandList();
+    LOG << "Read in " << commandList.size() << " commands." << endl;
+
+    const std::vector<std::string>& builtIns = testBase_.builtinCommandNames();
+    std::vector<std::string>::const_iterator it;
+    for (it = builtIns.begin(); it != builtIns.end(); ++it)
+    {
+        QString qstr((*it).c_str());
+        ui->commands->addItem(qstr);
+    }
+    ret = true;
 
     LOG << "MainWindow setup " << (ret ? "suceeded" : "failed") << endl;
 
