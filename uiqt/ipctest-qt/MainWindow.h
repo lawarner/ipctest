@@ -2,10 +2,22 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <vector>
 
+
+// FORWARD CLASS DECLARATIONS
 namespace Ui {
 class MainWindow;
 }
+
+namespace ipctest
+{
+class Command;
+class RunContext;
+class TestBase;
+typedef std::vector<Command *> CommandList;
+}
+
 
 class MainWindow : public QMainWindow
 {
@@ -15,8 +27,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     
+    bool setup(const std::string& defFilename, const std::string& testFilename);
+
 private:
     Ui::MainWindow *ui;
+
+    ipctest::RunContext& context_;
+    ipctest::TestBase&   testBase_;
 };
 
 #endif // MAINWINDOW_H

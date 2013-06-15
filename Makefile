@@ -25,7 +25,7 @@ SOCKSTR=../sockstr
 INCDIR = $(SOCKSTR)/include
 LIBSOCKLIB = $(SOCKSTR)/src/libsockstr.a
 
-SUBDIRS = libipctest uitext uigtk
+SUBDIRS = libipctest uitext uigtk uiqt
 
 CC = g++
 

@@ -1,5 +1,5 @@
 #
-#   Copyright (C) 2012
+#   Copyright (C) 2013
 #   Andy Warner
 #   This file is part of the sockstr class library.
 #
@@ -21,45 +21,36 @@
 # Simple makefile for the sockstr class library
 
 TOP = ..
-SOCKSTR=../../sockstr
+SOCKSTR=../$(TOP)/sockstr
 INCDIR = $(SOCKSTR)/include
 LIBSOCKLIB = $(SOCKSTR)/src/libsockstr.a
 
-SUBDIRS = 
+SUBDIRS = build-ipctest-qt
 
-CC = g++
-#CFLAGS = -Wall -O2 -I..
-#DBGFLAGS = -g -O2
-DBGFLAGS = -g -O0
-CPPFLAGS = -Wall $(DBGFLAGS) -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR)
-CCFLAGS = -Wall -$(DBGFLAGS) -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR)
-LDFLAGS = -pthread $(LIBSOCKLIB)
+#CC = g++
+#CCFLAGS = -Wall -g -O2 -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR)
+#LDFLAGS = -pthread $(LIBSOCKLIB)
 
-#COMPILE = $(CC) $(CFLAGS) -c
-
-OBJS := BuiltinCommands.o Command.o Condition.o Field.o FieldType.o Log.o \
-	Message.o Params.o Parser.o RunContext.o Serializer.o TestBase.o
-
+OBJS := 
 SRCS := $(OBJS:.o=.cpp)
+INCS = 
 
-INCS = $(echo *.h)
-
-LIBIPCTEST = libipctest.a
 
 PROGRAMS = 
 
 
-# .cpp.o: ; $(CC) $(CCFLAGS) -c $<
+.cpp.o: ; $(CC) $(CCFLAGS) -c $<
 
 
-all: $(LIBIPCTEST)
+all: setup $(PROGRAMS) subdirs
 
-$(LIBIPCTEST): $(OBJS) $(LIBSOCKLIB)
-	$(AR) rsv $@ $(OBJS)
 
-.PHONY: test
-test: $(LIBIPCTEST)
-	$(CC) -o tester main.cpp $(LIBIPCTEST)
+
+.PHONY: setup
+setup:
+	mkdir -p build-ipctest-qt
+	cd build-ipctest-qt; qmake -o Makefile ../ipctest-qt/ipctest-qt.pro
+
 
 .PHONY: subdirs
 subdirs:
@@ -70,15 +61,13 @@ subdirs:
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(LIBIPCTEST)
 	for dir in $(SUBDIRS); do \
 		make -C $$dir clean; \
 	done
 
-.PHONY: depends
-depends: $(SRCS) $(INCS)
-	$(CC) -I. -MM $(SRCS) > .makedepends
-	touch .mkdep-timestamp
 
-.makedepends:
-include .makedepends
+.PHONY: depends
+depends:
+	for dir in $(SUBDIRS); do \
+		make -C $$dir depends; \
+	done

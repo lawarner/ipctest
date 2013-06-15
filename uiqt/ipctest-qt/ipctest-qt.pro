@@ -4,9 +4,19 @@
 #
 #-------------------------------------------------
 
+CONFIG += debug
+
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+XMLLIB = `pkg-config --libs expat`
+
+INCPATH += ../../libipctest
+LIBS += -L../../libipctest -lipctest $$XMLLIB \
+        -L../../../sockstr/src -lsockstr \
+        -lssl -lcrypto
+
 
 TARGET = ipctest-qt
 TEMPLATE = app

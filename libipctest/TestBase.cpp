@@ -44,7 +44,11 @@ TestBase::TestBase()
 
 TestBase::~TestBase()
 {
-
+    MessageList::iterator it;
+    for (it = messageList_.begin(); it != messageList_.end(); ++it)
+    {
+        delete *it;
+    }
 }
 
 
@@ -57,6 +61,7 @@ void TestBase::init()
     builtinCommands_.push_back("Exec");
     builtinCommands_.push_back("Function");
     builtinCommands_.push_back("If");
+    builtinCommands_.push_back("Listen");
     builtinCommands_.push_back("Loop");
     builtinCommands_.push_back("Noop");
     builtinCommands_.push_back("Receive");
@@ -93,6 +98,8 @@ Command* TestBase::createCommand(const std::string& cmdName,
         cmd = new CommandElse;
     else if (cmdName == "Exec")
         cmd = new CommandExec("", false);
+    else if (cmdName == "Listen")
+        cmd = new CommandListen;
     else if (cmdName == "Loop")
         cmd = new CommandLoop(1);
     else if (cmdName == "Noop")

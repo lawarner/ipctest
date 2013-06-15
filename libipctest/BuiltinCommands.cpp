@@ -504,6 +504,40 @@ std::string CommandExec::toXml(int indent)
 }
 
 
+//  Listen
+CommandListen::CommandListen()
+    : Command("Listen")
+{
+
+}
+
+CommandListen::CommandListen(Params* params, Message* msg)
+    : Command("Listen", params, msg)
+{
+
+}
+
+Command* CommandListen::createCommand(Params* params, Message* msg)
+{
+    return new CommandListen(params, msg);
+}
+
+bool CommandListen::execute(RunContext& context)
+{
+    sockstr::Socket* sock = context.getSocket();
+    if (!sock)
+        return false;
+
+    sockstr::Socket* client = dynamic_cast<sockstr::Socket *>(sock->listen());
+    if (!client || !client->good())
+        return false;
+
+    context.addClientSocket(client);
+
+    return true;
+}
+
+
 // Loop
 CommandLoop::CommandLoop(int iters, Command* cmd)
     : Command("Loop", "Iterations", iters)

@@ -21,10 +21,20 @@ generate documentation if you have doxygen.
 Additional dependencies:
 - sockstr
 - expat
-- gtkmm
+- gtkmm (only for ipctest-gtk)
+- qt (only for ipctest-qt)
+
+One of the objectives of this project was to put as much common logic in the library
+so that the UI code can be minimal.  Currently, 3 different UI's are provided as 
+follows:
+- ipctest-tui: This is a commandline utility that runs testcase provided on the 
+commandline.  It outputs to standard output and is useful automating tests.
+- ipctest-gtk: This program uses the gtkmm C++ user interface.
+- ipctest-qt: This program uses Qt 5.0 user interface.
 
 ## Building
-To build the ipctest library and tools, type 'make'.  Additional prerequites 
-are required to build ipctest, such as:
+To build the ipctest library and tools, type 'make'.  You may need to edit some of 
+the Makefile settings to, for example, skip building the gtkmm version.
+
 
 

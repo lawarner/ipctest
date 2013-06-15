@@ -74,12 +74,12 @@ const std::string& Message::getName() const
     return name_;
 }
 
-const int Message::getOrdinal() const
+int Message::getOrdinal() const
 {
     return ordinal_;
 }
 
-const int Message::getSize() const
+int Message::getSize() const
 {
     return totalSize_;
 }

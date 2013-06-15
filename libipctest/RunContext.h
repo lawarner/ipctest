@@ -66,7 +66,10 @@ class RunContext
 {
 public:
     RunContext();
+    ~RunContext();
 
+    void addClientSocket(sockstr::Socket* client);
+    void removeClientSocket(sockstr::Socket* client);
     CommandList* getCommands();
     void setCommands(CommandList* cmds);
     CommandIterator getCommandIterator(int level = -1) const;
@@ -89,6 +92,7 @@ private:
     Message* message_;
     Params params_;
     std::vector<std::string> fieldValues_;
+    std::vector<sockstr::Socket*> clients_;
 
 private:
     RunContext(const RunContext&);	// disable copy constructor

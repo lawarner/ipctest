@@ -3,9 +3,13 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    std::string defFile("../../examples/t");
+    std::string testFile("../../examples/t.its");
+    QApplication app(argc, argv);
+
     MainWindow w;
+    w.setup(defFile, testFile);
     w.show();
     
-    return a.exec();
+    return app.exec();
 }

@@ -78,10 +78,32 @@ extern std::ostream& _cnullog;
 # define LOG LOGA
 #endif
 
-#define LOGLN(LEVEL) (LEVEL < _cloglevel) ? _cnullog : _cliblog
-#define LOGN(LEVEL)  (LEVEL < _cloglevel) ? _cnullog : _capplog
+#define LOGLN(LEVEL) ((LEVEL < _cloglevel) ? _cnullog : _cliblog)
+#define LOGN(LEVEL)  ((LEVEL < _cloglevel) ? _cnullog : _capplog)
 
 #define LOGLT LOGLN(Trace)
 #define LOGLD LOGLN(Debug)
 #define LOGLE LOGLN(Error)
 
+namespace ipctest
+{
+
+// Class 
+class Logger
+{
+public:
+    static std::ostream& clog();
+
+    // Simple stream manipulators
+    static std::ostream& prefix(std::ostream& os);
+    static std::ostream& postfix(std::ostream& os);
+
+protected:
+    static bool inited_;
+    static std::ofstream clog_;
+
+private:
+    Logger();
+};
+
+}  // namespace ipctest

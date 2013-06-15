@@ -67,7 +67,7 @@ public:
     virtual std::string toXml(int indent);
 };
 
-/** Connect command. */
+/** Connect a socket to an URL. */
 class CommandConnect : public Command
 {
 public:
@@ -83,7 +83,7 @@ public:
 
 };
 
-/** Connect command. */
+/** Disconnects from a socket. */
 class CommandDisconnect : public Command
 {
 public:
@@ -170,6 +170,17 @@ public:
 
 private:
     CommandList commands_;
+};
+
+/** Listen for client connections on a socket. */
+class CommandListen : public Command
+{
+public:
+    CommandListen();
+	CommandListen(Params* params, Message* msg = 0);
+
+    virtual Command* createCommand(Params* params, Message* msg = 0);
+    virtual bool execute(RunContext& context);
 };
 
 /** This command loops through other commands.  In the simpliest

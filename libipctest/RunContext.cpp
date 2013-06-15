@@ -39,6 +39,38 @@ RunContext::RunContext()
 
 }
 
+RunContext::~RunContext()
+{
+    if (sock_)
+        delete sock_;
+
+    vector<sockstr::Socket*>::iterator it;
+    for (it = clients_.begin(); it != clients_.end(); ++it)
+    {
+        if (*it)
+            delete *it;
+    }
+    clients_.clear();
+
+    //TODO message_ ?
+}
+
+
+void RunContext::addClientSocket(sockstr::Socket* client)
+{
+    clients_.push_back(client);
+}
+
+void RunContext::removeClientSocket(sockstr::Socket* client)
+{
+    vector<sockstr::Socket*>::iterator it;
+    it = std::find(clients_.begin(), clients_.end(), client);
+    if (it == clients_.end())
+        return;
+
+    delete *it;
+    clients_.erase(it);
+}
 
 CommandList* RunContext::getCommands()
 {
@@ -47,6 +79,9 @@ CommandList* RunContext::getCommands()
 
 void RunContext::setCommands(CommandList* cmds)
 {
+    //TODO: currently some callers maintain their command list.
+    //      Either change this behavior, or take ownership here so delete can
+    //      be done in destructor.
     commands_ = cmds;
     if (cmds)
         iter_ = cmds->begin();

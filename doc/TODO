@@ -1,4 +1,4 @@
-Some planned enhancements to ipctest        Updated: 6/9/2013
+Some planned enhancements to ipctest        Updated: 6/15/2013
 ------------------------------------        ------------------
 
 Improve ipctest UI so it is clear if test cases are being created, edited or
@@ -19,3 +19,5 @@ Add SendFile, ReceiveFile commands
 Support server-side testing (involves threading)
 
 Decouple dependency on specific libraries, such as sockstr, expat.
+
+Use auto_ptr

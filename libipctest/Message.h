@@ -55,6 +55,7 @@ typedef std::vector<Message *> MessageList;
 //
 // CLASS DEFINITIONS
 //
+/** An IPC Message. */
 class Message
 {
 public:
@@ -65,8 +66,8 @@ public:
     int bumpSequence(bool incr = true);
     const FieldsArray& getFields() const;
     const std::string& getName() const;
-    const int getOrdinal() const;
-    const int getSize() const;
+    int getOrdinal() const;
+    int getSize() const;
 
     /*! Take array of field values in string format and pack them into
      *  a buffer of internal representation, ready to be sent over the wire.
