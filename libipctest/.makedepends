@@ -9,6 +9,8 @@ Log.o: Log.cpp Log.h
 Message.o: Message.cpp Field.h FieldType.h Message.h Params.h
 Params.o: Params.cpp Params.h
 Parser.o: Parser.cpp Field.h FieldType.h Log.h Message.h Parser.h
+ParserIpc.o: ParserIpc.cpp Field.h FieldType.h Log.h Message.h \
+ ParserIpc.h Parser.h
 RunContext.o: RunContext.cpp Field.h FieldType.h Log.h Message.h \
  RunContext.h Command.h Params.h
 Serializer.o: Serializer.cpp Command.h Params.h Log.h Parser.h Message.h \

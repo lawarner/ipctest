@@ -21,7 +21,7 @@
 # Simple makefile for the sockstr class library
 
 TOP = ..
-SOCKSTR=../$(TOP)/sockstr
+SOCKSTR=$(TOP)/../control-service/sockstr
 INCDIR = $(SOCKSTR)/include
 LIBSOCKLIB = $(SOCKSTR)/src/libsockstr.a
 

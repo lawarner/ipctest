@@ -17,6 +17,7 @@ class RunContext;
 class TestBase;
 typedef std::vector<Command *> CommandList;
 }
+class MessagesModel;
 
 
 class MainWindow : public QMainWindow
@@ -34,6 +35,7 @@ private:
 
     ipctest::RunContext& context_;
     ipctest::TestBase&   testBase_;
+    MessagesModel* messagesModel_;
 };
 
 #endif // MAINWINDOW_H

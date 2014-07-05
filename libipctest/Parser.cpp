@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2012
+   Copyright (C) 2012 - 2014
    Andy Warner
    This file is part of the sockstr class library.
 
@@ -31,9 +31,6 @@
 using namespace ipctest;
 using namespace std;
 
-//
-static const string msgBegin("IPC_MESSAGE(");
-static const string msgEnd("IPC_ENDMESSAGE");
 #define WHITESPACE " \t\n\r"
 
 
@@ -47,81 +44,7 @@ Parser::~Parser()
 
 }
 
-bool Parser::fileToMessageList(const string& fname, MessageList& ml)
-{
-    return false;
-}
-
-bool Parser::stringToMessageList(const string& str, MessageList& ml)
-{
-    string::const_iterator it = str.begin();
-    PairIter in(it, str.end());
-    PairIter out;
-    while (getLine(in, out))
-    {
-        string strLine = out.get();
-//        cout << "Line: " << strLine;
-        if (strLine.compare(0, msgBegin.size(), msgBegin) == 0)
-        {
-            if (*strLine.rbegin() == ')')
-            {
-                string strMsg(strLine.begin() + msgBegin.size(), strLine.end() - 1);
-                Message* msg = createMessage(strMsg, in);
-                if (msg)
-                    ml.push_back(msg);
-//                cout << endl;
-            }
-        }
-    }
-
-    return true;
-}
-
-Message* Parser::createMessage(const std::string& msgName, PairIter& inStr)
-{
-//    cout << " -- Begin msg=" << msgName << endl;
-
-    Message* msg = new Message(msgName);
-    PairIter out;
-    while (getLine(inStr, out))
-    {
-        string strLine = out.get();
-//        cout << "createMessage line: " << strLine << endl;
-        if (strLine.compare(0, msgEnd.size(), msgEnd) == 0)
-            break;
-
-        vector<string> tokens;
-        splitTokens(strLine, tokens);
-        if (tokens.size() > 1)
-        {
-            string fieldName = tokens[1];
-            int occurs = 1;
-            if (fieldName.find('[') != fieldName.npos)
-            {
-                vector<string> toks;
-                splitTokens(fieldName, toks, "[]");
-                if (toks.size() == 2)
-                {
-                    fieldName = toks[0];
-                    istringstream(toks[1]) >> occurs;
-//                    cout << fieldName << " occurs " << occurs << endl;
-
-                }
-                else
-                {
-                    cerr << "Field " << fieldName
-                         << ": Expecting 2 toks, got " << toks.size() << endl;
-                }
-                
-            }
-            Field* field = Field::create(fieldName, tokens[0], occurs);
-            msg->addField(field);
-        }
-    }
-
-    return msg;
-}
-
+/////////////  static helper methods below :  //////////////////
 
 bool Parser::getLine(PairIter& inStr, PairIter& outLine, bool trim)
 {
@@ -141,7 +64,6 @@ bool Parser::getLine(PairIter& inStr, PairIter& outLine, bool trim)
     }
     return false;
 }
-
 
 void Parser::splitTokens(const std::string& str, vector<std::string>& strVec,
                          const char* seps)
@@ -169,7 +91,6 @@ void Parser::splitTokens(const std::string& str, vector<std::string>& strVec,
     }
 //    cout << "]" << endl;
 }
-
 
 void Parser::splitDelimitedTokens(const std::string& str, vector<std::string>& strVec,
                                   const char* seps)
@@ -245,7 +166,7 @@ std::string Parser::trimSpace(const std::string& str)
     return pi.get();
 }
 
-std::vector<string> Parser::splitString(const std::string& str)
+std::vector<string> Parser::splitString(const std::string& str, char delimit)
 {
     std::vector<string> v;
     if (str.empty()) return v;
@@ -254,9 +175,27 @@ std::vector<string> Parser::splitString(const std::string& str)
     size_t eol = 0;
     while (eol != string::npos)
     {
-        eol = str.find('\n', last);
+        eol = str.find(delimit, last);
         v.push_back(str.substr(last, eol));
         last = eol + 1;
+    }
+
+    return v;
+}
+
+std::vector<string> Parser::splitString(const std::string& str, const std::string& delimit)
+{
+    std::vector<string> v;
+    if (str.empty() || delimit.empty()) return v;
+
+    size_t dsize = delimit.size();
+    size_t last = 0;
+    size_t eol = 0;
+    while (eol != string::npos)
+    {
+        eol = str.find(delimit, last);
+        v.push_back(str.substr(last, eol));
+        last = eol + dsize;
     }
 
     return v;

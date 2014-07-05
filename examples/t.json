@@ -1,0 +1,23 @@
+
+{
+    "greeting": {
+        "name": "String",
+        "version": "String",
+	"role": "String",
+	"mainGroup": "String",
+	"type": "String"
+    }
+}
+
+{
+    "control": {
+        "command": "String",
+	"method": "String"
+    }
+}
+
+{
+    "shutdown": {
+        "when": "String"
+    }
+}

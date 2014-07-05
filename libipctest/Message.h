@@ -1,7 +1,7 @@
 /*
-   Copyright (C) 2012
+   Copyright (C) 2012 - 2014
    Andy Warner
-   This file is part of the sockstr class library.
+   This file is part of the ipctest utility.
 
    The sockstr class library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,12 +20,7 @@
 
 #ifndef _MESSAGE_H_INCLUDED_
 #define _MESSAGE_H_INCLUDED_
-//
-//
 
-//
-// INCLUDE FILES
-//
 #include <string>
 #include <vector>
 
@@ -96,10 +91,12 @@ public:
     int unpackParams(char* buf, Params& params) const;
     int unpackParams(const std::vector<std::string>& vals, Params& params) const;
 
+    //TODO std::string toJson(int indent, const char* buf = 0) const;
     std::string toXml(int indent, const char* buf = 0) const;
 
 private:
-    std::string name_;
+    const std::string name_;
+protected:
     int ordinal_;
     int totalSize_;
 

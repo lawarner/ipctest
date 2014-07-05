@@ -22,7 +22,7 @@
 
 TOP = ..
 INCDIR = $(TOP)/include
-IDIR2 = $(INCDIR)/sockstr
+IDIR2 = $(TOP)/../control-service/sockstr
 
 CC = g++
 CCFLAGS = -Wall -g -O2 -I$(TOP) -I$(INCDIR)

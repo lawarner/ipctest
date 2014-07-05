@@ -21,6 +21,7 @@
 // FieldType.cpp
 //
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <string.h>             // for memcpy()
@@ -28,29 +29,38 @@
 using namespace ipctest;
 
 
-FieldTypeInt FieldType::gFieldTypeInt;
+FieldTypeArray FieldType::gFieldTypeArray;
+FieldTypeChar  FieldType::gFieldTypeChar;
+FieldTypeInt   FieldType::gFieldTypeInt;
 FieldTypeInt16 FieldType::gFieldTypeInt16;
 FieldTypeInt32 FieldType::gFieldTypeInt32;
 FieldTypeInt64 FieldType::gFieldTypeInt64;
-FieldTypeChar  FieldType::gFieldTypeChar;
+FieldTypeString FieldType::gFieldTypeString;
 FieldTypeStruct FieldType::gFieldTypeStruct;
 FieldTypeUndefined FieldType::gFieldTypeUndefined;
 
 
 FieldType& FieldType::stringToType(const std::string& ftStr)
 {
-    if (ftStr == "int")
+    std::string fTypeStr;
+    std::transform(ftStr.begin(), ftStr.end(), fTypeStr.begin(), ::tolower);
+
+    if (fTypeStr == "int")
         return gFieldTypeInt;
-    else if (ftStr == "int16")
+    else if (fTypeStr == "int16")
         return gFieldTypeInt16;
-    else if (ftStr == "int32")
+    else if (fTypeStr == "int32")
         return gFieldTypeInt32;
-    else if (ftStr == "int64")
+    else if (fTypeStr == "int64")
         return gFieldTypeInt64;
-    else if (ftStr == "char")
+    else if (fTypeStr == "char")
         return gFieldTypeChar;
-    else if (ftStr == "struct")
+    else if (fTypeStr == "string")
+        return gFieldTypeString;
+    else if (fTypeStr == "struct")
         return gFieldTypeStruct;
+    else if (fTypeStr == "array")
+        return gFieldTypeArray;
 
     //TODO: check for extensions
     return gFieldTypeUndefined;
@@ -71,7 +81,9 @@ std::string FieldType::typeToString(const FieldType& fType)
         STRNAME(Int32);
         STRNAME(Int64);
         STRNAME(Char);
+        STRNAME(String);
         STRNAME(Struct);
+        STRNAME(Array);
     default:
         break;
     }
@@ -103,6 +115,18 @@ bool FieldType::fromString(const std::string& strval, void* raw, int elements) c
     return true;
 }
 
+
+bool FieldTypeArray::toString(const void* raw, std::string& strval, int elements) const
+{
+    std::cout << __PRETTY_FUNCTION__ << " value=" << strval << std::endl;
+    return false;
+}
+
+bool FieldTypeArray::fromString(const std::string& strval, void* raw, int elements) const
+{
+    std::cout << __PRETTY_FUNCTION__ << " value=" << strval << std::endl;
+    return false;
+}
 
 bool FieldTypeInt::toString(const void* raw, std::string& strval, int elements) const
 {
@@ -165,6 +189,19 @@ bool FieldTypeInt64::fromString(const std::string& strval, void* raw, int elemen
     std::istringstream(strval) >> *buf;
     std::cout << __PRETTY_FUNCTION__ << " value=" << *buf << std::endl;
     return true;
+}
+
+
+bool FieldTypeString::toString(const void* raw, std::string& strval, int elements) const
+{
+    std::cout << __PRETTY_FUNCTION__ << " value=" << strval << std::endl;
+    return false;
+}
+
+bool FieldTypeString::fromString(const std::string& strval, void* raw, int elements) const
+{
+    std::cout << __PRETTY_FUNCTION__ << " value=" << strval << std::endl;
+    return false;
 }
 
 

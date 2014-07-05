@@ -21,7 +21,7 @@
 # Simple makefile for the sockstr class library
 
 TOP = ..
-SOCKSTR=../../sockstr
+SOCKSTR=../../control-service/sockstr
 INCDIR = $(SOCKSTR)/include
 LIBSOCKLIB = $(SOCKSTR)/src/libsockstr.a
 
@@ -31,14 +31,17 @@ CC = g++
 #CFLAGS = -Wall -O2 -I..
 #DBGFLAGS = -g -O2
 DBGFLAGS = -g -O0
-CPPFLAGS = -Wall $(DBGFLAGS) -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR)
+CPPFLAGS = -Wall $(DBGFLAGS) -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR) $(JSONCPPINC)
 CCFLAGS = -Wall -$(DBGFLAGS) -DTARGET_LINUX=1 -I$(TOP) -I$(INCDIR)
-LDFLAGS = -pthread $(LIBSOCKLIB)
+LDFLAGS = -pthread $(LIBSOCKLIB) $(JSONCPPLIB)
 
-#COMPILE = $(CC) $(CFLAGS) -c
+
+JSONCPPLIB := $(shell pkg-config jsoncpp --libs)
+JSONCPPINC := $(shell pkg-config jsoncpp --cflags)
 
 OBJS := BuiltinCommands.o Command.o Condition.o Field.o FieldType.o Log.o \
-	Message.o Params.o Parser.o RunContext.o Serializer.o TestBase.o
+	Message.o Params.o Parser.o ParserIpc.o ParserJson.o RunContext.o \
+        Serializer.o TestBase.o
 
 SRCS := $(OBJS:.o=.cpp)
 
@@ -47,9 +50,6 @@ INCS = $(echo *.h)
 LIBIPCTEST = libipctest.a
 
 PROGRAMS = 
-
-
-# .cpp.o: ; $(CC) $(CCFLAGS) -c $<
 
 
 all: $(LIBIPCTEST)

@@ -23,9 +23,11 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include "BuiltinCommands.h"
 #include "Condition.h"
-#include "Parser.h"
+#include "ParserIpc.h"
+#include "ParserJson.h"
 #include "Serializer.h"
 #include "TestBase.h"
 using namespace ipctest;
@@ -146,8 +148,16 @@ bool TestBase::readIpcDefs(const std::string& fileName)
                       istreambuf_iterator<char>());
     ifile.close();
 
-    Parser parse;
-    if (!parse.stringToMessageList(strIpcDefs, messageList_))
+
+    Parser* parser;
+    if ((fileName.rfind(".json") + 5) == fileName.size())
+    {
+        parser = new ParserJson;
+    } else {
+        parser = new ParserIpc;
+    }
+    auto_ptr<Parser> parse(parser);
+    if (!parse->stringToMessageList(strIpcDefs, messageList_))
     {
         std::cerr << "Error parsing message list" << std::endl;
         return false;

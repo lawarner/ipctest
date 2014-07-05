@@ -42,11 +42,13 @@ namespace ipctest
 //
 // FORWARD CLASS DECLARATIONS
 //
+class FieldTypeArray;
+class FieldTypeChar;
 class FieldTypeInt;
 class FieldTypeInt16;
 class FieldTypeInt32;
 class FieldTypeInt64;
-class FieldTypeChar;
+class FieldTypeString;
 class FieldTypeStruct;
 class FieldTypeUndefined;
 
@@ -68,7 +70,9 @@ public:
         Int = Int32,
         Int64,
         Char,
-        Struct
+        String,
+        Struct,
+        Array
     };
 
 	FieldType(FieldIdent ft, int sz) : ftype_(ft), size_(sz) { }
@@ -92,13 +96,25 @@ protected:
     int size_;
 
 private:
-    static FieldTypeInt gFieldTypeInt;
+    static FieldTypeArray gFieldTypeArray;
+    static FieldTypeChar  gFieldTypeChar;
+    static FieldTypeInt   gFieldTypeInt;
     static FieldTypeInt16 gFieldTypeInt16;
     static FieldTypeInt32 gFieldTypeInt32;
     static FieldTypeInt64 gFieldTypeInt64;
-    static FieldTypeChar gFieldTypeChar;
+    static FieldTypeString gFieldTypeString;
     static FieldTypeStruct gFieldTypeStruct;
     static FieldTypeUndefined gFieldTypeUndefined;
+};
+
+class FieldTypeArray : public FieldType
+{
+public:
+FieldTypeArray() : FieldType(Array, 0) { }
+    virtual bool   toString(const void* raw,
+                            std::string& strval, int elements = 1) const;
+    virtual bool fromString(const std::string& strval,
+                            void* raw, int elements = 1) const;
 };
 
 class FieldTypeInt : public FieldType
@@ -141,6 +157,16 @@ class FieldTypeChar : public FieldType
 {
 public:
 FieldTypeChar() : FieldType(Char, 1) { }
+};
+
+class FieldTypeString : public FieldType
+{
+public:
+FieldTypeString() : FieldType(String, 0) { }
+    virtual bool   toString(const void* raw,
+                            std::string& strval, int elements = 1) const;
+    virtual bool fromString(const std::string& strval,
+                            void* raw, int elements = 1) const;
 };
 
 class FieldTypeStruct : public FieldType

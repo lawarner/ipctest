@@ -1,10 +1,11 @@
-ipctest-tui.o: ipctest-tui.cpp ../../sockstr/include/sockstr/sstypes.h \
- ../../sockstr/include/sockstr/Socket.h \
- ../../sockstr/include/sockstr/SocketAddr.h \
- ../../sockstr/include/sockstr/IPAddress.h \
- ../../sockstr/include/sockstr/Stream.h \
- ../../sockstr/include/sockstr/StreamBuf.h CommandRunner.h \
- ../libipctest/Parser.h ../libipctest/Message.h
+ipctest-tui.o: ipctest-tui.cpp \
+ ../../control-service/sockstr/include/sockstr/sstypes.h \
+ ../../control-service/sockstr/include/sockstr/Socket.h \
+ ../../control-service/sockstr/include/sockstr/SocketAddr.h \
+ ../../control-service/sockstr/include/sockstr/IPAddress.h \
+ ../../control-service/sockstr/include/sockstr/Stream.h \
+ ../../control-service/sockstr/include/sockstr/StreamBuf.h \
+ CommandRunner.h ../libipctest/Parser.h ../libipctest/Message.h
 CommandRunner.o: CommandRunner.cpp CommandRunner.h ../libipctest/Log.h \
  ../libipctest/RunContext.h ../libipctest/Command.h \
  ../libipctest/Params.h ../libipctest/TestBase.h ../libipctest/Message.h

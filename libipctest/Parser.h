@@ -161,12 +161,10 @@ class ParseTree : public PTNode
 */
 
 /**
- * Main parsing class.
+ * Base parsing class.
  *
- * At the moment, it is only used to parse the IPC message definitions, which for the
- * first version is a (restrictive) C languange include file.
- * This will be refactored as a MessageParser class.  Probably a new Parser manager
- * class will be added to allow unified parsing (IPC, xml, json, etc.).
+ * This class provides the (virtual) interface that parsers must implement.
+ * Additionally, this class provides many convenience methods.
  */ 
 class Parser
 {
@@ -176,29 +174,12 @@ public:
     virtual ~Parser();
 
     /**
-     * Read message definitions from a file and create a message list.
-     * @param fname file name containing IPC message definitions.
-     * @param ml message list returned.
-     * @returns true on success, otherwise false.
-     */
-    bool fileToMessageList(const std::string& fname, MessageList& ml);
-    /**
      * Read message definitions from a string and create a message list.
      * @param str string containing IPC message definitions.
      * @param ml message list returned.
      * @returns true on success, otherwise false.
      */
-    bool stringToMessageList(const std::string& str, MessageList& ml);
-
-    /**
-     * Create new message structure based on message name and definition.
-     * @param msgName name of message to define.
-     * @param inStr iterator pair of string containing the message definition.
-     *              The pair's end may point beyond the message.  This parameter
-     *              is updated to point past the message body upon return.
-     * @return pointer to the new message definition.
-     */
-    Message* createMessage(const std::string& msgName, PairIter& inStr);
+    virtual bool stringToMessageList(const std::string& str, MessageList& ml) = 0;
 
     // These are more internal functions, but could be useful outside this class
     static bool getLine(PairIter& inStr, PairIter& outLine, bool trim = true);
@@ -209,7 +190,11 @@ public:
         const char* seps = TOKEN_SEPERATORS);
     static void trimSpace(PairIter& pi, bool stripComments = true);
     static std::string trimSpace(const std::string& instr);
-    static std::vector<std::string> splitString(const std::string& str);
+
+    static std::vector<std::string> splitString(const std::string& str,
+                                                char delimit = '\n');
+    static std::vector<std::string> splitString(const std::string& str,
+                                                const std::string& delimit);
 
 private:
     Parser(const Parser&);	// disable copy constructor

@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    std::string defFile("../../examples/t");
+    std::string defFile("../../examples/t.json");
     std::string testFile("../../examples/t.its");
     QApplication app(argc, argv);
 

@@ -1,6 +1,7 @@
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "messagesmodel.h"
 
 #include "Command.h"
 #include "Log.h"
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , context_(*new ipctest::RunContext)
     , testBase_(*new ipctest::TestBase)
+    , messagesModel_(0)
 {
     ui->setupUi(this);
 }
@@ -25,6 +27,7 @@ MainWindow::~MainWindow()
     delete ui;
     delete &testBase_;
     delete &context_;
+    if (messagesModel_) delete messagesModel_;
 }
 
 bool MainWindow::setup(const std::string& defFilename, const std::string& testFilename)
@@ -55,6 +58,10 @@ bool MainWindow::setup(const std::string& defFilename, const std::string& testFi
         QString qstr((*it).c_str());
         ui->commands->addItem(qstr);
     }
+
+    messagesModel_ = new MessagesModel(testBase_);
+    ui->messageListView->setModel(messagesModel_);
+
     ret = true;
 
     LOG << "MainWindow setup " << (ret ? "suceeded" : "failed") << endl;

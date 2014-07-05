@@ -10,11 +10,12 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-XMLLIB = `pkg-config --libs expat`
+XMLLIB = `pkg-config --libs expat jsoncpp`
+
 
 INCPATH += ../../libipctest
 LIBS += -L../../libipctest -lipctest $$XMLLIB \
-        -L../../../sockstr/src -lsockstr \
+        -L../../../control-service/sockstr/src -lsockstr \
         -lssl -lcrypto
 
 
@@ -23,8 +24,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+    messagesmodel.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+    messagesmodel.h
 
 FORMS    += MainWindow.ui
